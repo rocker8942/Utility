@@ -89,7 +89,8 @@ namespace Utility.FTP
         /// <param name="password"></param>
         /// <param name="hostKey"></param>
         /// <param name="privateKeyPath"></param>
-        public SFtpClient(string hostname, string username, string password, string hostKey, string privateKeyPath)
+        /// <param name="passphrase"></param>
+        public SFtpClient(string hostname, string username, string password, string hostKey, string privateKeyPath, string passphrase)
         {
             if (string.IsNullOrEmpty(hostKey))
             {
@@ -101,6 +102,7 @@ namespace Utility.FTP
                     Password = password,
                     GiveUpSecurityAndAcceptAnySshHostKey = true,
                     SshPrivateKeyPath = privateKeyPath,
+                    PrivateKeyPassphrase = passphrase
                 };
             }
             else
@@ -113,6 +115,7 @@ namespace Utility.FTP
                     Password = password,
                     SshHostKeyFingerprint = hostKey,
                     SshPrivateKeyPath = privateKeyPath,
+                    PrivateKeyPassphrase = passphrase
                 };
             }
         }
