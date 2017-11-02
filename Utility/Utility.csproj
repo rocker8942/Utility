@@ -103,6 +103,7 @@
     <Compile Include="Encryption\PgpEncryptionHelper.cs" />
     <Compile Include="Encryption\PgpEncryptionKeys.cs" />
     <Compile Include="Enum\EnumHelper.cs" />
+    <Compile Include="File\IIOHelper.cs" />
     <Compile Include="FTP\FtpClient.cs" />
     <Compile Include="FTP\Ftp.cs" />
     <Compile Include="Encryption\GpgHelper.cs" />

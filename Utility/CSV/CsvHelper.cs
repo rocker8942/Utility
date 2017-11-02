@@ -19,6 +19,7 @@ namespace Utility.CSV
         private const char SeparatorReplacement = '#';
         private const char Qualifier = '"';
         public readonly List<ParseResponse> ParseErrors;
+        private readonly IIOHelper _ioHelper;
 
         public string CsvFile { get; }
         public DataTable CsvTable { get; }
@@ -48,9 +49,10 @@ namespace Utility.CSV
         /// <summary>
         ///     Helper class make CSV handling easy
         /// </summary>
-        public CsvHelper(string csvFile)
+        public CsvHelper(string csvFile, IIOHelper ioHelper)
         {
             CsvFile = csvFile;
+            _ioHelper = ioHelper;
             CsvTable = new DataTable();
             ParseErrors = new List<ParseResponse>();
         }
@@ -89,19 +91,19 @@ namespace Utility.CSV
         /// <param name="r">data reader</param>
         /// <param name="csvLocation">outpur csv location</param>
         /// <param name="columns">output columns</param>
-        public static void Write(IDataReader r, string csvLocation, Collection<string> columns)
+        public void Write(IDataReader r, string csvLocation, Collection<string> columns)
         {
-            IOHelper.WriteTextFile(GetCsvRawData(r, columns, true), csvLocation);
+            _ioHelper.WriteTextFile(GetCsvRawData(r, columns, true), csvLocation);
         }
 
-        private static void Write(IDataReader r, string csvLocation, Collection<string> columns, Encoding encoding)
+        private void Write(IDataReader r, string csvLocation, Collection<string> columns, Encoding encoding)
         {
-            IOHelper.WriteTextFile(GetCsvRawData(r, columns, true), csvLocation, encoding);
+            _ioHelper.WriteTextFile(GetCsvRawData(r, columns, true), csvLocation, encoding);
         }
 
-        private static void Write(IDataReader r, string csvLocation, Collection<string> columns, bool includeHeaders)
+        private void Write(IDataReader r, string csvLocation, Collection<string> columns, bool includeHeaders)
         {
-            IOHelper.WriteTextFile(GetCsvRawData(r, columns, includeHeaders), csvLocation);
+            _ioHelper.WriteTextFile(GetCsvRawData(r, columns, includeHeaders), csvLocation);
         }
 
         public string GetCsvData(bool includeHeaders = true)
@@ -165,10 +167,10 @@ namespace Utility.CSV
             return result;
         }
 
-        private static void Append(IDataReader dataReader, string csvLocation, Collection<string> columns)
+        private void Append(IDataReader dataReader, string csvLocation, Collection<string> columns)
         {
             //Gets the existing data in the csv file
-            var data = IOHelper.ReadTextFile(csvLocation);
+            var data = _ioHelper.ReadTextFile(csvLocation);
             //Add the data to string builder
             var sb = new StringBuilder(data);
             //Gets the data from the actual datareader
@@ -176,7 +178,7 @@ namespace Utility.CSV
             //Appends the new data to string builder
             sb.Append(dataToAppend);
             //Writes the file
-            IOHelper.WriteTextFile(sb.ToString(), csvLocation);
+            _ioHelper.WriteTextFile(sb.ToString(), csvLocation);
         }
 
         /// <summary>

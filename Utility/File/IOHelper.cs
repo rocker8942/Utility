@@ -15,7 +15,7 @@ namespace Utility
     /// <summary>
     /// Helper class to manage files
     /// </summary>
-    public static class IOHelper
+    public class IOHelper : IIOHelper
     {
         public static readonly string BasePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -23,7 +23,7 @@ namespace Utility
         ///     Reads the text content from a file
         /// </summary>
         /// <returns>text content</returns>
-        public static string ReadTextFile(string fileLocation)
+        public string ReadTextFile(string fileLocation)
         {
             string result = null;
 
@@ -53,7 +53,7 @@ namespace Utility
         /// </summary>
         /// <param name="content">text content</param>
         /// <param name="fileLocation"></param>
-        public static void WriteTextFile(string content, string fileLocation)
+        public void WriteTextFile(string content, string fileLocation)
         {
             StreamWriter sw = null;
 
@@ -77,7 +77,7 @@ namespace Utility
         /// <param name="content">text content</param>
         /// <param name="fileLocation"></param>
         /// <param name="encoding"></param>
-        public static void WriteTextFile(string content, string fileLocation, Encoding encoding)
+        public void WriteTextFile(string content, string fileLocation, Encoding encoding)
         {
             StreamWriter sw = null;
 
@@ -99,7 +99,7 @@ namespace Utility
         /// </summary>
         /// <param name="content"></param>
         /// <param name="fileLocation"></param>
-        public static void AttatchToTextFile(string content, string fileLocation)
+        public void AttatchToTextFile(string content, string fileLocation)
         {
             StreamWriter sw = null;
 
@@ -121,7 +121,7 @@ namespace Utility
         /// </summary>
         /// <param name="line"></param>
         /// <param name="fileLocation"></param>
-        public static void AppendLineToTextFile(string line, string fileLocation)
+        public void AppendLineToTextFile(string line, string fileLocation)
         {
             StreamWriter sw = null;
 
@@ -143,7 +143,7 @@ namespace Utility
         /// </summary>
         /// <param name="fileLocation"></param>
         /// <returns></returns>
-        public static byte[] ReadFileStream(string fileLocation)
+        public byte[] ReadFileStream(string fileLocation)
         {
             byte[] result = null;
 
@@ -178,7 +178,7 @@ namespace Utility
         /// Read a file being used by another process safely
         /// </summary>
         /// <param name="fileLocation"></param>
-        public static IEnumerable<string> ReadFileSafe(string fileLocation)
+        public IEnumerable<string> ReadFileSafe(string fileLocation)
         {
             using (FileStream fileStream = new FileStream(
                 fileLocation,
@@ -202,7 +202,7 @@ namespace Utility
         /// <param name="command"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static string RunExternalProcess(string command, string args)
+        public string RunExternalProcess(string command, string args)
         {
             var process = new Process();
 
@@ -226,7 +226,7 @@ namespace Utility
         /// </summary>
         /// <param name="source"></param>
         /// <param name="target"></param>
-        public static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        public void CopyAll(DirectoryInfo source, DirectoryInfo target)
         {
             // Check if the target directory exists, if not, create it.
             if (Directory.Exists(target.FullName) == false)
@@ -254,7 +254,7 @@ namespace Utility
         /// <param name="file"></param>
         /// <param name="searchText"></param>
         /// <returns></returns>
-        public static bool StringExists(string file, string searchText)
+        public bool StringExists(string file, string searchText)
         {
             //Declare reader as a new StreamReader with file as the file to use
             var reader = new StreamReader(file);
@@ -293,7 +293,7 @@ namespace Utility
         /// </summary>
         /// <param name="arrBytes"></param>
         /// <returns></returns>
-        public static Object ByteArrayToObject(byte[] arrBytes)
+        public Object ByteArrayToObject(byte[] arrBytes)
         {
             var memStream = new MemoryStream();
             var binForm = new BinaryFormatter();
@@ -307,7 +307,7 @@ namespace Utility
         /// </summary>
         /// <param name="arrBytes"></param>
         /// <returns></returns>
-        public static Object ByteArrayStrToObject(string arrBytes)
+        public Object ByteArrayStrToObject(string arrBytes)
         {
             var memStream = new MemoryStream();
             var binForm = new BinaryFormatter();
@@ -317,7 +317,7 @@ namespace Utility
             return obj;
         }
 
-        public static void LogToFile(string logFilePath, string logMsg)
+        public void LogToFile(string logFilePath, string logMsg)
         {
             StreamWriter stream;
             string logFormat = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString() + " ==> ";
@@ -354,7 +354,7 @@ namespace Utility
         /// Add date at the end of original file. If exist, overwrites
         /// </summary>
         /// <param name="fullpath"></param>
-        public static string ChangeFileToNameWithDate(string fullpath)
+        public string ChangeFileToNameWithDate(string fullpath)
         {
             var fileInfo = new FileInfo(fullpath);
             string filenameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.Name);
@@ -375,7 +375,7 @@ namespace Utility
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static string GetNameWithDate(string filePath)
+        public string GetNameWithDate(string filePath)
         {
             string filename = Path.GetFileNameWithoutExtension(filePath);
             Debug.Assert(filename != null, "filename != null");
@@ -387,7 +387,7 @@ namespace Utility
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static string GetNameWithDateAndTime(string filePath)
+        public string GetNameWithDateAndTime(string filePath)
         {
             string filename = Path.GetFileNameWithoutExtension(filePath);
             Debug.Assert(filename != null, "filename != null");
@@ -400,7 +400,7 @@ namespace Utility
         /// <param name="filePath">YYYY-MM-DD hh:mm:ss</param>
         /// <param name="dateOffSet">use this to get the data that is not today providing by +/- days</param>
         /// <returns></returns>
-        public static string ReplaceFileNameWithDateTime(string filePath, int dateOffSet = 0)
+        public string ReplaceFileNameWithDateTime(string filePath, int dateOffSet = 0)
         {
             DateTime now = DateTime.Now.AddDays(dateOffSet);
             var fileName = Path.GetFileName(filePath);
@@ -427,7 +427,7 @@ namespace Utility
         /// <param name="inputPath"></param>
         /// <param name="pattern"></param>
         /// <returns></returns>
-        public static List<FileInfo> GetFileInfos(string inputPath, string pattern)
+        public List<FileInfo> GetFileInfos(string inputPath, string pattern)
         {
             IEnumerable<string> inputFiles = Directory.EnumerateFiles(inputPath, pattern);
             var fileinfos = new List<FileInfo>();
@@ -439,7 +439,7 @@ namespace Utility
             return fileinfos;
         }
 
-        public static Stream GetStream(string stringData)
+        public Stream GetStream(string stringData)
         {
             MemoryStream stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream);
@@ -449,7 +449,7 @@ namespace Utility
             return stream;
         }
 
-        public static byte[] GetByte(Stream sourceStream)
+        public byte[] GetByte(Stream sourceStream)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -458,7 +458,7 @@ namespace Utility
             }
         }
 
-        public static string GetString(Stream inputStream)
+        public string GetString(Stream inputStream)
         {
             string output;
             using (StreamReader reader = new StreamReader(inputStream))
@@ -468,7 +468,7 @@ namespace Utility
             return output;
         }
 
-        public static void WriteStream(Stream inputStream, ref byte[] dataBytes)
+        public void WriteStream(Stream inputStream, ref byte[] dataBytes)
         {
             using (Stream outputStream = inputStream)
             {
@@ -476,7 +476,7 @@ namespace Utility
             }
         }
 
-        public static bool IsDirectory(string pathToLog)
+        public bool IsDirectory(string pathToLog)
         {
             if (Directory.Exists(pathToLog))
                 return true;
@@ -495,7 +495,7 @@ namespace Utility
         /// <param name="filePath">The file path to write the object instance to.</param>
         /// <param name="objectToWrite">The object instance to write to the XML file.</param>
         /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
-        public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false)
+        public void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false)
         {
             using (Stream stream = File.Open(filePath, append ? FileMode.Append : FileMode.Create))
             {
@@ -510,7 +510,7 @@ namespace Utility
         /// <typeparam name="T">The type of object to read from the XML.</typeparam>
         /// <param name="filePath">The file path to read the object instance from.</param>
         /// <returns>Returns a new instance of the object read from the binary file.</returns>
-        public static T ReadFromBinaryFile<T>(string filePath)
+        public T ReadFromBinaryFile<T>(string filePath)
         {
             using (Stream stream = File.Open(filePath, FileMode.Open))
             {
@@ -529,7 +529,7 @@ namespace Utility
         /// <param name="filePath">The file path to write the object instance to.</param>
         /// <param name="objectToWrite">The object instance to write to the file.</param>
         /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
-        public static void WriteToXmlFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
+        public void WriteToXmlFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
         {
             var serializer = new XmlSerializer(typeof(T));
             using (var writer = new StreamWriter(filePath, append))
@@ -545,7 +545,7 @@ namespace Utility
         /// <typeparam name="T">The type of object to read from the file.</typeparam>
         /// <param name="filePath">The file path to read the object instance from.</param>
         /// <returns>Returns a new instance of the object read from the XML file.</returns>
-        public static T ReadFromXmlFile<T>(string filePath) where T : new()
+        public T ReadFromXmlFile<T>(string filePath) where T : new()
         {
             var serializer = new XmlSerializer(typeof(T));
             using (var reader = new StreamReader(filePath))
@@ -564,7 +564,7 @@ namespace Utility
         /// <param name="filePath">The file path to write the object instance to.</param>
         /// <param name="objectToWrite">The object instance to write to the file.</param>
         /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
-        public static void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
+        public void WriteToJsonFile<T>(string filePath, T objectToWrite, bool append = false) where T : new()
         {
             var contentsToWriteToFile = JsonConvert.SerializeObject(objectToWrite);
             using (var writer = new StreamWriter(filePath, append))
@@ -580,7 +580,7 @@ namespace Utility
         /// <typeparam name="T">The type of object to read from the file.</typeparam>
         /// <param name="filePath">The file path to read the object instance from.</param>
         /// <returns>Returns a new instance of the object read from the Json file.</returns>
-        public static T ReadFromJsonFile<T>(string filePath) where T : new()
+        public T ReadFromJsonFile<T>(string filePath) where T : new()
         {
             // read stream safe
             using (FileStream fileStream = new FileStream(
@@ -602,7 +602,7 @@ namespace Utility
         /// </summary>
         /// <param name="from">source file's full path</param>
         /// <param name="to">destination file's full path</param>
-        public static void FileOverwrite(string from, string to)
+        public void FileOverwrite(string from, string to)
         {
             if (File.Exists(to))
                 File.Delete(to);

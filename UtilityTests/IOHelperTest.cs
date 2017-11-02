@@ -10,7 +10,8 @@ namespace UtilityTests
         [TestMethod]
         public void GetNameWithDateTest()
         {
-            string result = IOHelper.GetNameWithDate("abc");
+            var ioHelper = new IOHelper();
+            string result = ioHelper.GetNameWithDate("abc");
             Assert.AreEqual(result, "abc_" + DateTime.Now.ToString("yyyyMMdd"));
         }
     }

@@ -155,6 +155,8 @@ namespace Utility.FTP
 
             using (var session = new Session())
             {
+                // session.SessionLogPath = "WinSCP.log";
+
                 // Connect
                 session.Open(_sessionOptions);
 
