@@ -22,7 +22,7 @@ namespace Utility.CSV
         private readonly IIOHelper _ioHelper;
 
         public string CsvFile { get; }
-        public DataTable CsvTable { get; }
+        public DataTable CsvTable { get; set; }
 
         /// <summary>
         ///     Gets the list of columns of the csv file.
