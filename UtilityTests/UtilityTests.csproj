@@ -83,7 +83,6 @@
     <Compile Include="CSV\CSVHelperTests.cs" />
     <Compile Include="Encryption\CryptoTests.cs" />
     <Compile Include="FTP\FtpClientTests.cs" />
-    <Compile Include="FTP\FTPSClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
