@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WinSCP;
 
 namespace Utility.FTP
 {
@@ -11,6 +12,6 @@ namespace Utility.FTP
         /// <param name="remotePath">Remote path needs to be separate with '/'</param>
         /// <param name="preserveTimestamp"></param>
         /// <returns></returns>
-        List<string> FtpUpload(string localPath, string remotePath, bool preserveTimestamp = true);
+        TransferOperationResult FtpUpload(string localPath, string remotePath, bool preserveTimestamp = true);
     }
 }

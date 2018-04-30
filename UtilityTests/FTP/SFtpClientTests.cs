@@ -1,5 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.Linq;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Utility.FTP;
 using WinSCP;
@@ -9,45 +9,43 @@ namespace UtilityTests.FTP
     [TestClass]
     public class SFtpClientTests
     {
-        // [TestMethod]
-        //public void FtpSClientTest()
-        //{
-        //    string serverName = "test.rebex.net";
-        //    string userName = "demo";
-        //    string password = "password";
-        //    int port = 990;
-        //    var localFileInfo = new FileInfo(@"C:\Users\joe\Documents\Temp\test.csv");
-        //    string remoteDirectory = "";
+        [TestCategory("Integration")]
+        [TestMethod]
+        public void FTPTest()
+        {
+            var ftp = new SFtpClient("localhost", "admin", "syncplify", FtpSecure.None);
+            var result = ftp.FtpUpload(@"d:\temp\test1.csv", "/");
 
-        //    // FTP-S
-        //    bool actual = false;
-        //    var sftp = new SFtpClient(serverName, userName, password, FtpSecure.Implicit, port);
-        //    try
-        //    {
-        //        sftp.FtpUpload(localFileInfo.FullName, @"/" + remoteDirectory + @"/" + localFileInfo.Name);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        const string error = "No permission.";
-        //        actual = ex.InnerException.Message.Contains(error);
-        //    }
+            // assert
+            result.IsSuccess.Should().BeTrue();
+            result.Transfers.Count.Should().Be(1);
+            result.Transfers.First().FileName.Should(). BeEquivalentTo(@"d:\temp\test1.csv");
+        }
 
-        //    Assert.IsTrue(actual);
-        //}
+        [TestCategory("Integration")]
+        [TestMethod]
+        public void FTPsTestWithoutFingerPrint()
+        {
+            var ftpS = new SFtpClient("localhost", "admin", "syncplify", FtpSecure.Explicit);
+            var result = ftpS.FtpUpload(@"d:\temp\test2.csv", "/");
 
-        // [TestMethod]
-        //public void SFtpClientTest()
-        //{
-        //    string serverName = "localhost";
-        //    string userName = "admin";
-        //    string password = "test";
-        //    var localFileInfo = new FileInfo(@"C:\Users\joe\Documents\Temp\test.csv");
-        //    string remoteDirectory = "";
-        //    string privateKeyPath = @"C:\Users\joe\Documents\Security\SSH Keys\testPrivateKey.ppk";
+            // assert
+            result.IsSuccess.Should().BeTrue();
+            result.Transfers.Count.Should().Be(1);
+            result.Transfers.First().FileName.Should().BeEquivalentTo(@"d:\temp\test2.csv");
+        }
 
-        //    // S-FTP
-        //    var sftp = new SFtpClient(serverName, userName, password, string.Empty, privateKeyPath);
-        //    sftp.FtpUpload(localFileInfo.FullName, @"/" + remoteDirectory + @"/" + localFileInfo.Name);
-        //}
+        [TestCategory("Integration")]
+        [TestMethod]
+        public void FTPsTestWithFingerPrint()
+        {
+            var ftpS = new SFtpClient("localhost", "admin", "syncplify", FtpSecure.Explicit, "68:8c:12:46:ce:0b:2c:d3:63:95:45:b6:26:d2:ec:b9:cb:72:18:77");
+            var result = ftpS.FtpUpload(@"d:\temp\test3.csv", "/");
+
+            // assert
+            result.IsSuccess.Should().BeTrue();
+            result.Transfers.Count.Should().Be(1);
+            result.Transfers.First().FileName.Should().BeEquivalentTo(@"d:\temp\test3.csv");
+        }
     }
 }
