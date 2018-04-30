@@ -24,7 +24,7 @@ namespace UtilityTests.CSV
             using (var streamReader = new StreamReader(stream))
             {
                 // act
-                var csv = new CsvHelper("", mockIOHelper.Object);
+                var csv = new CsvHelper("");
                 csv.ReadCsvFast(streamReader, ',', true);
 
                 // assert

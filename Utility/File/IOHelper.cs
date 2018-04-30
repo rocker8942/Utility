@@ -49,53 +49,6 @@ namespace Utility
         }
 
         /// <summary>
-        ///     Writes the text content to a file
-        /// </summary>
-        /// <param name="content">text content</param>
-        /// <param name="fileLocation"></param>
-        public void WriteTextFile(string content, string fileLocation)
-        {
-            StreamWriter sw = null;
-
-            try
-            {
-                sw = new StreamWriter(fileLocation);
-                sw.Write(content);
-            }
-            finally
-            {
-                if (sw != null)
-                {
-                    sw.Close();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Writes the text content to a file
-        /// </summary>
-        /// <param name="content">text content</param>
-        /// <param name="fileLocation"></param>
-        /// <param name="encoding"></param>
-        public void WriteTextFile(string content, string fileLocation, Encoding encoding)
-        {
-            StreamWriter sw = null;
-
-            try
-            {
-                sw = new StreamWriter(fileLocation, false, encoding, 4096);
-                sw.Write(content);
-            }
-            finally
-            {
-                if (sw != null)
-                {
-                    sw.Close();
-                }
-            }
-        }
-
-        /// <summary>
         /// </summary>
         /// <param name="content"></param>
         /// <param name="fileLocation"></param>

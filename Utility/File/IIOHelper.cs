@@ -14,21 +14,6 @@ namespace Utility
         string ReadTextFile(string fileLocation);
 
         /// <summary>
-        ///     Writes the text content to a file
-        /// </summary>
-        /// <param name="content">text content</param>
-        /// <param name="fileLocation"></param>
-        void WriteTextFile(string content, string fileLocation);
-
-        /// <summary>
-        ///     Writes the text content to a file
-        /// </summary>
-        /// <param name="content">text content</param>
-        /// <param name="fileLocation"></param>
-        /// <param name="encoding"></param>
-        void WriteTextFile(string content, string fileLocation, Encoding encoding);
-
-        /// <summary>
         /// </summary>
         /// <param name="content"></param>
         /// <param name="fileLocation"></param>
