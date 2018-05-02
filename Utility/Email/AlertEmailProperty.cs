@@ -14,5 +14,9 @@ namespace Utility
         public string SubjectHolder { get; set; }
         public bool isHtml { get; set; }
         public AlertDistribution Distribution { get; set; }
+        public bool IsSSL { get; set; }
+        public int Port { get; set; }
+        public string SMTPId { get;set; }
+        public string SMTPPassword { get; set; }
     }
 }
