@@ -129,6 +129,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Utility.nuspec" />
     <None Include="Utility.snk" />
   </ItemGroup>
   <ItemGroup>
