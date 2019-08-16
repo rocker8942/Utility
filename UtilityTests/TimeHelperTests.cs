@@ -26,7 +26,8 @@ namespace Utility.Tests
             // convert undefined to local. ToLocalTime assume the unspecified time as UTC
             DateTime dateTimeUnspecified = DateTime.Parse(DateTime.Today.ToString());
             DateTime local = dateTimeUnspecified.ToLocalTime();
-            Assert.IsFalse(dateTimeUnspecified == local);
+            if (offset.Hours != 0)
+                Assert.IsFalse(dateTimeUnspecified == local);
 
             // convert AEST to UTC
             // When AEST is not DST
