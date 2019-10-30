@@ -18,6 +18,8 @@
     <TestProjectType>UnitTest</TestProjectType>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -62,9 +64,8 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WinSCPnet, Version=1.4.1.7995, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
-      <HintPath>..\packages\WinSCP.5.11.3\lib\WinSCPnet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="WinSCPnet, Version=1.6.5.9925, Culture=neutral, PublicKeyToken=2271ec4a3c56d0bf, processorArchitecture=MSIL">
+      <HintPath>..\packages\WinSCP.5.15.5\lib\net\WinSCPnet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>
@@ -95,6 +96,10 @@
     <Compile Include="TimeHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Utility.FTP\Utility.FTP.csproj">
+      <Project>{ac987fb6-112c-472c-b924-6c149ebe1cc4}</Project>
+      <Name>Utility.FTP</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{26103AE3-EC38-497A-A1ED-373DA3D65565}</Project>
       <Name>Utility</Name>
@@ -109,9 +114,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="WinSCP.exe" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ConfigManage\" />
@@ -142,7 +144,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\packages\WinSCP.5.15.5\build\WinSCP.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WinSCP.5.15.5\build\WinSCP.targets'))" />
   </Target>
+  <Import Project="..\packages\WinSCP.5.15.5\build\WinSCP.targets" Condition="Exists('..\packages\WinSCP.5.15.5\build\WinSCP.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
