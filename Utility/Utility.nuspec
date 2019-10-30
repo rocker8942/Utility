@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>Moneystock.Utility.GeneralPurpose</id>
-    <version>1.0.0.12</version>
+    <version>1.0.0.13</version>
     <title>Utility.Net</title>
     <authors>joe park</authors>
     <owners>joe park</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>C# Utility for general purpose</description>
-    <releaseNotes>Support SSL in Email</releaseNotes>
+    <releaseNotes>CSV Helper simplify</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>C# Utility</tags>
   </metadata>
