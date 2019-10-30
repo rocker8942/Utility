@@ -9,7 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>C# Helper on WinSCP.Net</description>
     <releaseNotes>Init</releaseNotes>
-    <copyright>Copyright 2019/copyright>
+    <copyright>Copyright 2019</copyright>
     <tags>C# Utility</tags>
   </metadata>
 </package>
