@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Utility
 {
@@ -22,7 +23,7 @@ namespace Utility
         /// <summary>
         ///     Send alert with the given property
         /// </summary>
-        public void SendAlertEmail()
+        public async Task SendAlertEmail()
         {
             Email email;
             // Create SMTP object
@@ -55,17 +56,17 @@ namespace Utility
             }
 
             email.IsBodyHtml = _emailProperty.isHtml;
-            email.SendEmail(to, from, subject, body);
+            await email.SendEmail(to, from, subject, body);
         }
 
         /// <summary>
         ///     Send alert with the given property and the message overwritten by the parameter
         /// </summary>
         /// <param name="message">Email message to send. This could be a full html content or main message in a html template</param>
-        public void SendAlertEmail(string message)
+        public async Task SendAlertEmail(string message)
         {
             _emailProperty.Body = message;
-            SendAlertEmail();
+            await SendAlertEmail();
         }
     }
 }
