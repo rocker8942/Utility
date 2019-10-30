@@ -16,7 +16,7 @@ namespace UtilityTests.FTP
             var ftp = new SFtpClient("localhost", "admin", "syncplify", FtpSecure.None);
             var result = ftp.FtpUpload(@"d:\temp\test1.csv", "/");
 
-            // assert
+            // assertsync
             result.IsSuccess.Should().BeTrue();
             result.Transfers.Count.Should().Be(1);
             result.Transfers.First().FileName.Should(). BeEquivalentTo(@"d:\temp\test1.csv");
