@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace Utility
 {
@@ -40,36 +41,6 @@ namespace Utility
             _port = port;
         }
 
-        public void SendEmail(IEnumerable<MailAddress> toAddresses, string fromAddress, string subject, string body, IEnumerable<Attachment> attachments, string asyncToken = "", IEnumerable<MailAddress> ccAddresses = null)
-        {
-            var smtp = new SmtpClient(_emailHost)
-            {
-                EnableSsl = _isSSL,
-                Port = _port,
-                Credentials = new NetworkCredential(_emailAccountId, _emailAccountPassword),
-            };
-
-            var message = new MailMessage();
-            foreach (var toAddress in toAddresses)
-                message.To.Add(toAddress);
-
-            if (ccAddresses != null)
-                foreach (var ccAddress in ccAddresses)
-                    message.CC.Add(ccAddress);
-
-            message.From = new MailAddress(fromAddress);
-            message.Subject = subject;
-            message.Body = body;
-            message.IsBodyHtml = IsBodyHtml;
-            foreach (var attachment in attachments)
-                message.Attachments.Add(attachment);
-
-            if (string.IsNullOrEmpty(asyncToken))
-                smtp.Send(message);
-            else
-                smtp.SendAsync(message, asyncToken);
-        }
-
         /// <summary>
         ///     To accept toAddress as string collection
         /// </summary>
@@ -77,9 +48,38 @@ namespace Utility
         /// <param name="fromAddress"></param>
         /// <param name="subject"></param>
         /// <param name="body"></param>
-        public void SendEmail(StringCollection toAddresses, string fromAddress, string subject, string body)
+        public async Task SendEmail(StringCollection toAddresses, string fromAddress, string subject, string body)
         {
-            SendEmail(toAddresses, fromAddress, subject, body, new List<Attachment>());
+            await SendEmail(toAddresses, fromAddress, subject, body, new List<Attachment>());
+        }
+
+        public async Task SendEmail(IEnumerable<MailAddress> toAddresses, string fromAddress, string subject, string body, IEnumerable<Attachment> attachments, IEnumerable<MailAddress> ccAddresses = null)
+        {
+            using (var message = new MailMessage())
+            {
+                foreach (var toAddress in toAddresses)
+                    message.To.Add(toAddress);
+
+                if (ccAddresses != null)
+                    foreach (var ccAddress in ccAddresses)
+                        message.CC.Add(ccAddress);
+
+                message.From = new MailAddress(fromAddress);
+                message.Subject = subject;
+                message.Body = body;
+                message.IsBodyHtml = IsBodyHtml;
+                foreach (var attachment in attachments)
+                    message.Attachments.Add(attachment);
+
+                using (var smtp = new SmtpClient(_emailHost)             {
+                    EnableSsl = _isSSL,
+                    Port = _port,
+                    Credentials = new NetworkCredential(_emailAccountId, _emailAccountPassword),
+                })
+                {
+                    await smtp.SendMailAsync(message);
+                }
+            }
         }
 
         /// <summary>
@@ -90,13 +90,13 @@ namespace Utility
         /// <param name="subject"></param>
         /// <param name="body"></param>
         /// <param name="attachments"></param>
-        public void SendEmail(StringCollection toAddresses, string fromAddress, string subject, string body, IEnumerable<Attachment> attachments)
+        public async Task SendEmail(StringCollection toAddresses, string fromAddress, string subject, string body, IEnumerable<Attachment> attachments)
         {
             var recipients = new MailAddressCollection();
             foreach (var address in toAddresses)
                 recipients.Add(new MailAddress(address));
 
-            SendEmail(recipients, fromAddress, subject, body, attachments);
+            await SendEmail(recipients, fromAddress, subject, body, attachments);
         }
     }
 }
