@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using LumenWorks.Framework.IO.Csv;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace Utility.CSV
 {
@@ -15,6 +18,15 @@ namespace Utility.CSV
     {
         private const char Separator = ',';
         private const char Qualifier = '"';
+
+        /// <summary>
+        ///     Helper class make CSV handling easy
+        /// </summary>
+        public CsvHelper(string csvFile)
+        {
+            CsvFile = csvFile;
+            CsvTable = new DataTable();
+        }
 
         public string CsvFile { get; }
         public DataTable CsvTable { get; set; }
@@ -42,15 +54,6 @@ namespace Utility.CSV
         public DataRowCollection Rows => CsvTable.Rows;
 
         /// <summary>
-        ///     Helper class make CSV handling easy
-        /// </summary>
-        public CsvHelper(string csvFile)
-        {
-            CsvFile = csvFile;
-            CsvTable = new DataTable();
-        }
-
-        /// <summary>
         ///     write the data table content into a csv file at the specified location.
         /// </summary>
         /// <param name="csvLocation">csv file output location</param>
@@ -71,7 +74,8 @@ namespace Utility.CSV
         /// <param name="r">data reader</param>
         /// <param name="csvLocation">outpur csv location</param>
         /// <param name="columns">output columns</param>
-        public void Write(IDataReader r, string csvLocation, Collection<string> columns, bool includeHeaders = true, Encoding encoding = null)
+        public void Write(IDataReader r, string csvLocation, Collection<string> columns, bool includeHeaders = true,
+            Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
@@ -158,12 +162,51 @@ namespace Utility.CSV
         }
 
         /// <summary>
+        ///     Read csv data from a file
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public List<T> ReadFile<T>(string filePath)
+        {
+            using var reader = new StreamReader(filePath);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            csv.Configuration.PrepareHeaderForMatch = (a, b) => a.ToUpper()
+                .Replace(@" ", string.Empty)
+                .Replace(".", string.Empty);
+
+            return csv.GetRecords<T>().ToList();
+        }
+
+        /// <summary>
+        ///     Read csv data from a file
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TMap"></typeparam>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public List<T> ReadFile<T, TMap>(string filePath) where TMap : ClassMap
+        {
+            using var reader = new StreamReader(filePath);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+            csv.Configuration.PrepareHeaderForMatch = (a, b) => a.ToUpper()
+                .Replace(@" ", string.Empty)
+                .Replace(".", string.Empty);
+
+            csv.Configuration.RegisterClassMap<TMap>();
+
+            return csv.GetRecords<T>().ToList();
+        }
+
+        /// <summary>
         ///     Read CSV into database from file.
         ///     This method will terminate when CSV format is corrupted.
         /// </summary>
         /// <param name="delimiter"></param>
         /// <param name="hasHeader"></param>
-        public void ReadCsvFast(char delimiter, bool hasHeader = true)
+        public void ReadCsvFast(char delimiter = ',', bool hasHeader = true)
         {
             ReadCsvFast(new StreamReader(CsvFile), delimiter, hasHeader);
         }
@@ -178,34 +221,13 @@ namespace Utility.CSV
         public void ReadCsvFast(StreamReader stream, char delimiter, bool hasHeader)
         {
             // open the file which is a CSV file with headers
-            using (var csv = new CsvReader(stream, hasHeader, delimiter))
+            using (var csv = new CsvReader(stream, CultureInfo.InvariantCulture))
             {
-                var fieldCount = csv.FieldCount;
-
-                // Get header
-                if (hasHeader)
+                using (var dr = new CsvDataReader(csv))
                 {
-                    var headers = csv.GetFieldHeaders().ToList();
-                    foreach (var header in headers)
-                        if (!CsvTable.Columns.Contains(header))
-                            CsvTable.Columns.Add(header);
-                        else
-                            CsvTable.Columns.Add(header + DateTime.Now.Second);
-                }
-                else
-                {
-                    for (var i = 0; i < fieldCount; i++)
-                        CsvTable.Columns.Add(i.ToString());
-                }
-
-                // Get records
-                while (csv.ReadNextRecord())
-                {
-                    var row = CsvTable.NewRow();
-                    for (var i = 0; i < fieldCount; i++)
-                        row[i] = csv[i];
-
-                    CsvTable.Rows.Add(row);
+                    var dt = new DataTable();
+                    dt.Load(dr);
+                    CsvTable = dt;
                 }
             }
         }

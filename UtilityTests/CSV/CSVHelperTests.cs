@@ -1,5 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -20,7 +23,7 @@ namespace UtilityTests.CSV
             // arrange
             var mockIOHelper = new Mock<IIOHelper>();
 
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes("id,email\r\n1,id1,test1.com\r\nid2,test2.com"));
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes("id,email\r\nid1,test1.com\r\nid2,test2.com"));
             using (var streamReader = new StreamReader(stream))
             {
                 // act
@@ -30,6 +33,12 @@ namespace UtilityTests.CSV
                 // assert
                 var expected = new Collection<string> {"id", "email"};
                 CollectionAssert.AreEquivalent(expected, csv.ColumnList);
+
+                var recordExpected = new List<string>()
+                {
+                    "id1","test1.com"
+                };
+                CollectionAssert.AreEquivalent(recordExpected, csv.Rows[0].ItemArray.Select(a => a.ToString()).ToList());
             }
         }
     }
