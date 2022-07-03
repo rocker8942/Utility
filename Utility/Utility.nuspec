@@ -7,7 +7,6 @@
     <authors>joe park</authors>
     <owners>joe park</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license type="expression">MS-PL</license>
     <licenseUrl>https://licenses.nuget.org/MS-PL</licenseUrl>
     <description>C# Utility for general purpose</description>
     <releaseNotes>Upgrade to .net 4.7.2</releaseNotes>
