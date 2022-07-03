@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Moneystock.Utility.GeneralPurpose</id>
-    <version>1.0.0.17</version> 
+    <version>1.0.0.18</version> 
     <title>Utility.Net</title>
     <authors>joe park</authors>
     <owners>joe park</owners>
@@ -10,7 +10,7 @@
     <license type="expression">MS-PL</license>
     <licenseUrl>https://licenses.nuget.org/MS-PL</licenseUrl>
     <description>C# Utility for general purpose</description>
-    <releaseNotes>Replace Lumenworks with CSVHelper</releaseNotes>
+    <releaseNotes>Upgrade to .net 4.7.2</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>C# Utility</tags>
   </metadata>
