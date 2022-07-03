@@ -170,11 +170,14 @@ namespace Utility.CSV
         public List<T> ReadFile<T>(string filePath)
         {
             using var reader = new StreamReader(filePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                PrepareHeaderForMatch = args => args.Header.ToUpper()
+                    .Replace(@" ", string.Empty)
+                    .Replace(".", string.Empty)
+            };
 
-            csv.Configuration.PrepareHeaderForMatch = (a, b) => a.ToUpper()
-                .Replace(@" ", string.Empty)
-                .Replace(".", string.Empty);
+            using var csv = new CsvReader(reader, csvConfiguration);
 
             return csv.GetRecords<T>().ToList();
         }
@@ -189,13 +192,14 @@ namespace Utility.CSV
         public List<T> ReadFile<T, TMap>(string filePath) where TMap : ClassMap
         {
             using var reader = new StreamReader(filePath);
-            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-            csv.Configuration.PrepareHeaderForMatch = (a, b) => a.ToUpper()
-                .Replace(@" ", string.Empty)
-                .Replace(".", string.Empty);
-
-            csv.Configuration.RegisterClassMap<TMap>();
+            var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                PrepareHeaderForMatch = args => args.Header.ToUpper()
+                    .Replace(@" ", string.Empty)
+                    .Replace(".", string.Empty)
+            };
+            using var csv = new CsvReader(reader, csvConfiguration);
+            csv.Context.RegisterClassMap<TMap>();
 
             return csv.GetRecords<T>().ToList();
         }
